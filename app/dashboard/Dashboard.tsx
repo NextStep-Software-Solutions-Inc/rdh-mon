@@ -1,14 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Thermometer, Egg, Timer, List, AlertTriangle } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+"use client";
 
-const survivalData = [
+import React, { useEffect, useState } from "react";
+import {
+    AreaChart,
+    Area,
+    CartesianGrid,
+    XAxis,
+    YAxis,
+    ResponsiveContainer,
+} from "recharts";
+import {
+    Card,
+    CardContent,
+    CardDescription, CardFooter,
+    CardHeader,
+    CardTitle,
+} from "~/components/ui/card";
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "~/components/ui/chart";
+import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "~/components/ui/select";
+import { useIsMobile } from "~/hooks/use-mobile";
+import {SectionCards} from "~/dashboard/SectionCards";
+import {Separator} from "~/components/ui/separator";
+import {Label} from "~/components/ui/label";
+import {Switch} from "~/components/ui/switch";
+import {Button} from "~/components/ui/button";
+import {TrendingUpIcon} from "lucide-react";
+
+const chartData = [
     { day: 1, quality: 50 },
     { day: 5, quality: 70 },
     { day: 10, quality: 85 },
@@ -16,8 +45,20 @@ const survivalData = [
     { day: 16, quality: 98 },
     { day: 18, quality: 96 },
     { day: 21, quality: 90 },
+    { day: 28, quality: 100 },
 ];
 
+
+const chartConfig = {
+    hatchRate: {
+        label: "Hatch Rate",
+        color: "#c89237",
+    },
+    temperature: {
+        label: "Temperature",
+        color: "#c89237",
+    },
+};
 const activityLog = [
     "Day 1: Eggs loaded into incubator",
     "Day 3: Temperature check and calibration",
@@ -29,159 +70,178 @@ const activityLog = [
 ];
 
 export default function EggIncubatorDashboard() {
-    const totalEggs = 3600;
-    const [aliveEggs, setAliveEggs] = useState(360);
-    const [temperature, setTemperature] = useState(37.8);
+    const isMobile = useIsMobile();
+    const [timeRange, setTimeRange] = useState("30d");
 
     useEffect(() => {
-        const eggInterval = setInterval(() => {
-            setAliveEggs((prev) => {
-                const next = prev - (Math.random() < 0.3 ? 1 : 0); // fewer dies
-                return next < 0 ? 0 : next;
-            });
-        }, 3000);
+        if (isMobile) setTimeRange("7d");
+    }, [isMobile]);
 
-        const tempInterval = setInterval(() => {
-            setTemperature((prev) => {
-                const change = (Math.random() - 0.5) * 0.4;
-                let next = prev + change;
-                next = Math.max(36.5, Math.min(39, next)); // clamp within realistic range
-                return parseFloat(next.toFixed(2));
-            });
-        }, 3000);
-
-        return () => {
-            clearInterval(eggInterval);
-            clearInterval(tempInterval);
-        };
-    }, []);
-
-    const deadEggs = totalEggs - aliveEggs;
-    const mortalityRate = (deadEggs / totalEggs) * 100;
+    const filteredData = chartData; // for demo, use all data
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-            <Card className="shadow-lg">
-                <CardContent className="p-4">
-                    <h2 className="text-xl font-semibold mb-2">Egg Count</h2>
-                    <p className="text-gray-700 text-sm">Total Eggs: {totalEggs}</p>
-                    <p className="text-green-600 text-sm">
-                        Eggs Left: {aliveEggs} ({((aliveEggs / totalEggs) * 100).toFixed(1)}%)
-                    </p>
-                </CardContent>
-            </Card>
+        <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+                <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                    <SectionCards/>
 
-            <Card className="shadow-lg">
-                <CardContent className="p-4">
-                    <h2 className="text-xl font-semibold mb-2 flex items-center gap-2">
-                        <AlertTriangle className="w-5 h-5 text-red-500" /> Mortality Rate
-                    </h2>
-                    <p className="text-red-600 text-sm">{mortalityRate.toFixed(1)}% died ({deadEggs} eggs)</p>
-                    <Progress value={mortalityRate} className="mt-2 bg-red-100" />
-                </CardContent>
-            </Card>
+                    <div
+                        className="*:data-[slot=card]:shadow-xs  @5xl/main:grid-cols-2 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
+                        <Card className="">
+                            <CardHeader className="relative">
+                                <CardTitle>Incubation Egg Viability</CardTitle>
+                                <CardDescription>
+          <span className="@[540px]/card:block hidden">
+            Your hatch rate is on track compared to previous cycles
+          </span>
+                                    <span className="@[540px]/card:hidden">Last 7 days</span>
+                                </CardDescription>
+                                <div className="absolute right-4 top-4">
+                                    <ToggleGroup
+                                        type="single"
+                                        value={timeRange}
+                                        onValueChange={setTimeRange}
+                                        variant="outline"
+                                        className="@[767px]/card:flex hidden"
+                                    >
+                                        <ToggleGroupItem value="90d" className="h-8 px-2.5">
+                                            Last 3 months
+                                        </ToggleGroupItem>
+                                        <ToggleGroupItem value="30d" className="h-8 px-2.5">
+                                            Last 30 days
+                                        </ToggleGroupItem>
+                                        <ToggleGroupItem value="7d" className="h-8 px-2.5">
+                                            Last 7 days
+                                        </ToggleGroupItem>
+                                    </ToggleGroup>
+                                    <Select value={timeRange} onValueChange={setTimeRange}>
+                                        <SelectTrigger className="@[767px]/card:hidden flex w-40">
+                                            <SelectValue placeholder="Last 3 months"/>
+                                        </SelectTrigger>
+                                        <SelectContent className="rounded-xl">
+                                            <SelectItem value="90d" className="rounded-lg">
+                                                Last 3 months
+                                            </SelectItem>
+                                            <SelectItem value="30d" className="rounded-lg">
+                                                Last 30 days
+                                            </SelectItem>
+                                            <SelectItem value="7d" className="rounded-lg">
+                                                Last 7 days
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
+                                <ChartContainer
+                                    config={chartConfig}
+                                    className="aspect-auto h-[250px] w-full"
+                                >
+                                    <AreaChart data={filteredData}>
+                                        <defs>
+                                            <linearGradient id="fillQuality" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="var(--color-quality)" stopOpacity={0.8}/>
+                                                <stop offset="95%" stopColor="var(--color-hatchRate)"
+                                                      stopOpacity={0.1}/>
+                                            </linearGradient>
+                                            <linearGradient id="fillTemperature" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="5%" stopColor="var(--color-temperature)"
+                                                      stopOpacity={0.8}/>
+                                                <stop offset="95%" stopColor="var(--color-temperature)"
+                                                      stopOpacity={0.1}/>
+                                            </linearGradient>
+                                        </defs>
+                                        <CartesianGrid vertical={false}/>
+                                        <XAxis
+                                            dataKey="day"
+                                            tickLine={true}
+                                            axisLine={true}
+                                            tickMargin={8}
+                                            minTickGap={32}
+                                            tickFormatter={(value) => `Day ${value}`}
+                                        />
+                                        <YAxis/>
+                                        <ChartTooltip
+                                            cursor={false}
+                                            content={
+                                                <ChartTooltipContent
+                                                    labelFormatter={(value) => {
+                                                        return value;
+                                                    }}
+                                                    indicator="dot"
+                                                />
+                                            }
+                                        />
+                                        <Area
+                                            dataKey="quality"
+                                            type="monotone"
+                                            fill="url(#fillHatchRate)"
+                                            stroke="#c89237"
+                                            stackId="a"
+                                            dot={true}
+                                        />
+                                        <Area
+                                            dataKey="day"
+                                            type="monotone"
+                                            fill="url(#fillHatchRate)"
+                                            stroke="#c89237"
+                                            stackId="a"
+                                            dot={true}
+                                        />
 
-            <Card className="shadow-lg">
-                <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
-                        <Thermometer className="w-6 h-6" />
-                        <div>
-                            <h2 className="text-xl font-semibold">Temperature</h2>
-                            <p className="text-gray-500">Current: {temperature.toFixed(2)}°C</p>
-                            <Progress value={((temperature - 36.5) / (39 - 36.5)) * 100} className="mt-2" />
-                        </div>
+                                    </AreaChart>
+                                </ChartContainer>
+                            </CardContent>
+                            <CardFooter className="flex-col items-start gap-1 text-sm">
+                                <div className="line-clamp-1 flex gap-2 font-medium">
+                                    Up by 8.6% compared to previous cycle <TrendingUpIcon className="size-4" />
+                                </div>
+                                <div className="text-muted-foreground">
+                                   Showing egg viability over the 28-day cycle (weekly checks: Days 7,14,21,28 )
+                                </div>
+                            </CardFooter>
+                        </Card>
+                        <Card className="">
+                            <CardContent className="p-4">
+                                <h2 className="text-xl font-semibold mb-2">Activities Log</h2>
+                                <Separator className="mb-4"/>
+                                <ul className="list-disc pl-5 space-y-2 text-sm text-gray-700">
+                                    {activityLog.map((entry, idx) => (
+                                        <li key={idx}>{entry}</li>
+                                    ))}
+                                </ul>
+                            </CardContent>
+                        </Card>
                     </div>
-                </CardContent>
-            </Card>
 
-
-            <Card className="shadow-lg">
-                <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
-                        <Egg className="w-6 h-6" />
-                        <div>
-                            <h2 className="text-xl font-semibold">Humidity</h2>
-                            <p className="text-gray-500">Current: 60%</p>
-                            <Progress value={60} className="mt-2" />
-                        </div>
+                    <div
+                        className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
+                        <Card className="col-span-full shadow-lg">
+                            <CardContent className="p-4">
+                                <h2 className="text-xl font-semibold mb-2">Controls</h2>
+                                <Separator className="mb-4"/>
+                                <div className="flex flex-wrap gap-4">
+                                    <div>
+                                        <Label htmlFor="heat">Heating</Label>
+                                        <Switch id="heat" defaultChecked/>
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="humidifier">Humidifier</Label>
+                                        <Switch id="humidifier"/>
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="fan">Ventilation Fan</Label>
+                                        <Switch id="fan" defaultChecked/>
+                                    </div>
+                                    <div>
+                                        <Button>Reset Timer</Button>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
                     </div>
-                </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-                <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <h2 className="text-xl font-semibold">Egg Turning</h2>
-                            <p className="text-gray-500">Auto-mode</p>
-                        </div>
-                        <Switch defaultChecked />
                     </div>
-                </CardContent>
-            </Card>
-
-            <Card className="shadow-lg">
-                <CardContent className="p-4">
-                    <div className="flex items-center gap-4">
-                        <Timer className="w-6 h-6" />
-                        <div>
-                            <h2 className="text-xl font-semibold">Incubation Timer</h2>
-                            <p className="text-gray-500">Day 14 of 21</p>
-                            <Progress value={66} className="mt-2" />
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            <Card className="col-span-full shadow-lg">
-                <CardContent className="p-4">
-                    <h2 className="text-xl font-semibold mb-2">Survival Peak Chart</h2>
-                    <ResponsiveContainer width="100%" height={250}>
-                        <LineChart data={survivalData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                            <XAxis dataKey="day" label={{ value: "Days", position: "insideBottomRight", offset: -5 }} />
-                            <YAxis label={{ value: "Quality (%)", angle: -90, position: "insideLeft" }} />
-                            <Tooltip />
-                            <Line type="monotone" dataKey="quality" stroke="#16a34a" strokeWidth={2} dot={{ r: 4 }} />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </CardContent>
-            </Card>
-
-            <Card className="col-span-full shadow-lg">
-                <CardContent className="p-4">
-                    <h2 className="text-xl font-semibold mb-2">Activities Log</h2>
-                    <Separator className="mb-4" />
-                    <ul className="list-disc pl-5 space-y-2 text-sm text-gray-700">
-                        {activityLog.map((entry, idx) => (
-                            <li key={idx}>{entry}</li>
-                        ))}
-                    </ul>
-                </CardContent>
-            </Card>
-
-            <Card className="col-span-full shadow-lg">
-                <CardContent className="p-4">
-                    <h2 className="text-xl font-semibold mb-2">Controls</h2>
-                    <Separator className="mb-4" />
-                    <div className="flex flex-wrap gap-4">
-                        <div>
-                            <Label htmlFor="heat">Heating</Label>
-                            <Switch id="heat" defaultChecked />
-                        </div>
-                        <div>
-                            <Label htmlFor="humidifier">Humidifier</Label>
-                            <Switch id="humidifier" />
-                        </div>
-                        <div>
-                            <Label htmlFor="fan">Ventilation Fan</Label>
-                            <Switch id="fan" defaultChecked />
-                        </div>
-                        <div>
-                            <Button>Reset Timer</Button>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
-    );
-}
+                </div>
+            </div>
+            );
+            }
