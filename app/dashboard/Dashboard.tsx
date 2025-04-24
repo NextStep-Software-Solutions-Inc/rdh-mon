@@ -36,6 +36,14 @@ import {Label} from "~/components/ui/label";
 import {Switch} from "~/components/ui/switch";
 import {Button} from "~/components/ui/button";
 import {TrendingUpIcon} from "lucide-react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "~/components/ui/table";
 
 const chartData = [
     { day: 1, quality: 50 },
@@ -184,7 +192,7 @@ export default function EggIncubatorDashboard() {
                                             dataKey="day"
                                             type="monotone"
                                             fill="url(#fillHatchRate)"
-                                            stroke="#c89237"
+                                            stroke="hsl(141 53% 53%)"
                                             stackId="a"
                                             dot={true}
                                         />
@@ -201,15 +209,38 @@ export default function EggIncubatorDashboard() {
                                 </div>
                             </CardFooter>
                         </Card>
-                        <Card className="">
-                            <CardContent className="p-4">
-                                <h2 className="text-xl font-semibold mb-2">Activities Log</h2>
-                                <Separator className="mb-4"/>
-                                <ul className="list-disc pl-5 space-y-2 text-sm text-gray-700">
-                                    {activityLog.map((entry, idx) => (
-                                        <li key={idx}>{entry}</li>
-                                    ))}
-                                </ul>
+                        <Card className="shadow-lg">
+                            <CardHeader>
+                                <CardTitle>Incubator Performance</CardTitle>
+                                <CardDescription>Batch performance improved across 3 incubators</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>Incubator</TableHead>
+                                            <TableHead>Batch</TableHead>
+                                            <TableHead>Success Rate</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        <TableRow>
+                                            <TableCell>Incubator A</TableCell>
+                                            <TableCell>Batch 01</TableCell>
+                                            <TableCell>95%</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Incubator B</TableCell>
+                                            <TableCell>Batch 02</TableCell>
+                                            <TableCell>92%</TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell>Incubator C</TableCell>
+                                            <TableCell>Batch 03</TableCell>
+                                            <TableCell>97%</TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
                             </CardContent>
                         </Card>
                     </div>
