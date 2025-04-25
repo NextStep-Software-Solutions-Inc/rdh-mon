@@ -5,10 +5,11 @@ export default function Landing() {
   return (
     <main className="container mx-auto h-screen flex flex-col items-center justify-center">
       <div className="flex flex-col items-center">
+        <img src="/eggspose.png" alt="Eggspose Logo" className="h-80 mb-4" />
         <h3 className="text-4xl font-semibold mb-4">
-          Hello Farmer! 👋
+          Hello egg farmer! 👋
         </h3>
-        <h1 className="text-6xl font-bold mb-4">Welcome to Egg Moon</h1>
+        <h1 className="text-6xl font-bold mb-4">Welcome to <span className="animated-gradient bg-gradient-to-r from-pink-500 to-yellow-500 bg-clip-text text-transparent tracking-wide font-black">Eggspose</span></h1>
         <p className="text-lg">Your one-stop solution for monitoring egg encubation.</p>
         <p className="text-lg">Get started by navigating through the app.</p>
       </div>
