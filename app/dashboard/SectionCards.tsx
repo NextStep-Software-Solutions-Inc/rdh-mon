@@ -1,6 +1,5 @@
 import {
     AlertTriangle,
-    Egg,
     Thermometer,
     TrendingDownIcon,
     TrendingUpIcon
@@ -16,7 +15,6 @@ import {
     CardTitle
 } from "~/components/ui/card";
 import { Progress } from "~/components/ui/progress";
-
 import React, { useEffect, useState } from "react";
 
 export function SectionCards() {
@@ -29,12 +27,12 @@ export function SectionCards() {
 
     useEffect(() => {
         const eggInterval = setInterval(() => {
-            setAliveEggs((prev) => Math.max(prev - (Math.random() < 0.3 ? 1 : 0), 0));
+            setAliveEggs(prev => Math.max(prev - (Math.random() < 0.3 ? 1 : 0), 0));
         }, 3000);
 
         const tempInterval = setInterval(() => {
-            setTemperature((prev) => {
-                let next = prev + (Math.random() - 0.5) * 0.4;
+            setTemperature(prev => {
+                const next = prev + (Math.random() - 0.5) * 0.4;
                 return parseFloat(Math.max(36.5, Math.min(39.0, next)).toFixed(2));
             });
         }, 3000);
@@ -49,102 +47,103 @@ export function SectionCards() {
     const mortalityRate = (deadEggs / totalEggs) * 100;
 
     return (
-        <div className="grid grid-cols-1 gap-4 px-4 lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-            {/* Projected Income Card */}
-            <Card className="@container/card">
-                <CardHeader className="relative">
-                    <CardTitle>Projected Income</CardTitle>
+        <div className="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 xl:grid-cols-4 lg:px-6">
+           <Card className="transition hover:shadow-xl border rounded-2xl bg-white/90 dark:bg-muted/80 backdrop-blur-md">
+                <CardHeader>
+                    <CardTitle className="text-lg font-bold">Total Eggs</CardTitle>
                     <CardDescription>Based on current hatching rate</CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <h1 className="text-3xl font-bold">
-                        {new Intl.NumberFormat("en-PH", {
-                            style: "currency",
-                            currency: "PHP"
-                        }).format(360 * 35)}
-                    </h1>
-                    <p className="text-muted-foreground text-sm">₱35 per duckling</p>
-                    <div className="mt-4">
-                        <p className="text-sm text-gray-700">Total Eggs</p>
-                        <h2 className="text-2xl font-semibold">+{totalEggs.toLocaleString()}</h2>
-                        <p className="text-green-600 text-sm">Eggs Left: {aliveEggs} ({((aliveEggs / totalEggs) * 100).toFixed(1)}%)</p>
+                <CardContent className="space-y-4">
+                    <div>
+                        <h3 className="text-2xl font-semibold">+{totalEggs.toLocaleString()}</h3>
+                        <p className="text-sm text-green-600">
+                            Eggs Left: {aliveEggs} ({((aliveEggs / totalEggs) * 100).toFixed(1)}%)
+                        </p>
                     </div>
                 </CardContent>
-                <CardFooter className="justify-between">
-                    <Badge variant="outline" className="flex items-center gap-1 text-xs">
-                        <TrendingDownIcon className="w-3 h-3" />
+                <CardFooter className="flex justify-between text-sm">
+                    <Badge className="bg-green-100 text-green-700 flex gap-1 rounded-md px-2 py-0.5">
+                        <TrendingUpIcon className="w-4 h-4" />
                         +12.5%
                     </Badge>
-                    <div className="text-sm text-muted-foreground">Visitors for the last 6 months</div>
+                    <span className="text-muted-foreground">Last 6 months</span>
                 </CardFooter>
             </Card>
 
-            {/* Mortality Rate Card */}
-            <Card className="@container/card">
-                <CardHeader className="relative">
-                    <CardDescription>Hatching Eggs</CardDescription>
-                    <CardTitle className="flex items-center gap-2 text-xl font-semibold text-red-600">
+            <Card className="transition hover:shadow-xl border rounded-2xl bg-white/90 dark:bg-muted/80 backdrop-blur-md">
+                <CardHeader>
+                    <CardDescription className="text-sm font-medium">Hatching Eggs</CardDescription>
+                    <CardTitle className="flex items-center gap-2 text-red-600">
                         <AlertTriangle className="w-5 h-5" />
                         Mortality Rate
                     </CardTitle>
-                    <p className="text-sm">{mortalityRate.toFixed(1)}% died ({deadEggs} eggs)</p>
-                    <Progress value={mortalityRate} className="mt-2 bg-red-100" />
-                    <div className="absolute top-4 right-4">
-                        <Badge variant="outline" className="flex items-center gap-1 text-xs">
-                            <TrendingDownIcon className="w-3 h-3" />
-                            -20%
-                        </Badge>
-                    </div>
                 </CardHeader>
-                <CardFooter className="text-sm text-muted-foreground">
-                    Down 20% this period – Acquisition needs attention
+                <CardContent className="space-y-2">
+                    <p className="text-sm">
+                        {mortalityRate.toFixed(1)}% died ({deadEggs} eggs)
+                    </p>
+                    <Progress value={mortalityRate} className="bg-red-100" />
+                </CardContent>
+                <CardFooter className="flex justify-between text-sm">
+                    <Badge className="bg-red-100 text-red-700 flex gap-1 rounded-md px-2 py-0.5">
+                        <TrendingDownIcon className="w-4 h-4" />
+                        -20%
+                    </Badge>
+                    <span className="text-muted-foreground">Needs action</span>
                 </CardFooter>
             </Card>
 
-            {/* Female Ducklings Card */}
-            <Card className="@container/card">
-                <CardHeader className="relative">
-                    <CardTitle className="text-2xl font-semibold">Female Ducks Hatched</CardTitle>
-                    <p className="text-xl font-semibold text-purple-600">
+            <Card className="transition hover:shadow-xl border rounded-2xl bg-white/90 dark:bg-muted/80 backdrop-blur-md">
+                <CardHeader>
+                    <CardTitle className="text-lg font-bold">Female Ducks Hatched</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                    <h3 className="text-2xl font-semibold text-purple-600">
                         +{femaleEggs.toLocaleString()}
-                    </p>
-                    <p className="text-purple-500 text-sm">
+                    </h3>
+                    <p className="text-sm text-purple-500">
                         Female Eggs Left: {aliveFemaleEggs} ({((aliveFemaleEggs / totalEggs) * 100).toFixed(1)}%)
                     </p>
-                    <div className="absolute top-4 right-4">
-                        <Badge variant="outline" className="flex items-center gap-1 text-xs">
-                            <TrendingUpIcon className="w-3 h-3" />
-                            +12.5%
-                        </Badge>
-                    </div>
-                </CardHeader>
-                <CardFooter className="text-sm text-muted-foreground">
-                    Visitors for the last 6 months
+                </CardContent>
+                <CardFooter className="flex justify-between text-sm">
+                    <Badge className="bg-purple-100 text-purple-700 flex gap-1 rounded-md px-2 py-0.5">
+                        <TrendingUpIcon className="w-4 h-4" />
+                        +12.5%
+                    </Badge>
+                    <span className="text-muted-foreground">Last 6 months</span>
                 </CardFooter>
             </Card>
 
-            {/* Temperature Card */}
-            <Card className="@container/card">
-                <CardHeader className="relative">
-                    <CardDescription><h2 className="text-xl font-semibold">Temperature</h2></CardDescription>
-                    <div className="flex items-center gap-3 mt-2">
-                        <Thermometer className="w-6 h-6 text-blue-500" />
+            {/* Temperature */}
+            <Card className="transition hover:shadow-xl border rounded-2xl bg-white/90 dark:bg-muted/80 backdrop-blur-md">
+                <CardHeader>
+                    <CardTitle className="text-lg font-bold">Temperature</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex items-center gap-4">
+                        <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
+                            <Thermometer className="w-5 h-5 text-blue-600" />
+                        </div>
                         <div>
-                            <p className="text-sm text-gray-600">Current: {temperature.toFixed(2)}°C</p>
-                            <Progress value={((temperature - 36.5) / (39 - 36.5)) * 100} className="mt-2" />
+                            <p className="text-sm text-gray-600">
+                                Current: {temperature.toFixed(2)}°C
+                            </p>
+                            <Progress
+                                value={((temperature - 36.5) / (39 - 36.5)) * 100}
+                                className="mt-1"
+                            />
                         </div>
                     </div>
-                    <div className="absolute top-4 right-4">
-                        <Badge variant="outline" className="flex items-center gap-1 text-xs">
-                            <TrendingUpIcon className="w-3 h-3" />
-                            +12.5%
-                        </Badge>
-                    </div>
-                </CardHeader>
-                <CardFooter className="text-sm text-muted-foreground">
-                    Strong user retention – Engagement exceeded targets
+                </CardContent>
+                <CardFooter className="flex justify-between text-sm">
+                    <Badge className="bg-blue-100 text-blue-700 flex gap-1 rounded-md px-2 py-0.5">
+                        <TrendingUpIcon className="w-4 h-4" />
+                        +12.5%
+                    </Badge>
+                    <span className="text-muted-foreground">Stable conditions</span>
                 </CardFooter>
             </Card>
+
         </div>
     );
 }
