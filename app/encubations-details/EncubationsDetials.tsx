@@ -1,5 +1,7 @@
-import { useParams } from "react-router";
+import { useParams, useSearchParams } from "react-router";
 import EncubationAreaChart from "~/components/charts/EncubationAreaChart";
+import EncubationCards, { type EncubationCardsProps } from "~/components/EncubationCards";
+import EncubationCompleteDialog from "~/components/EncubationCompleteDialog";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import UpdateEncubationStatusDialog from "~/components/UpdateEncubationStatusDialog";
@@ -28,7 +30,28 @@ const encubation: Encubation = {
 
 export default function EncubationsDetials() {
   const {encubationId} = useParams<{encubationId: string}>()
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const complete = searchParams.get("complete") === "true";
+   
+  const handleCloseComplete = (open: boolean) => {
+    setSearchParams(prev => {
+      prev.set("complete", open ? "true" : "false");
+      return prev;
+    });
+  }
   
+
+  const encubationStats: EncubationCardsProps = {
+    maleChickPrice: 5,
+    balotCount: 20,
+    balotPrice: 15,
+    penoyCount: 10,
+    penoyPrice: 7,
+    femaleChickPrice: 75,
+    initilaEggCount: encubation.eggCount,
+    eggPrice: 7
+  }
 
   return (
     <main className="px-4 space-y-4">
@@ -41,11 +64,15 @@ export default function EncubationsDetials() {
           <Badge variant="secondary">{encubation.eggCount}</Badge>
         </div>
       </section>
+      <section className="">
+          <EncubationCards {...encubationStats}/>
+      </section>
       <section>
         <EncubationAreaChart/>
       </section>
       <div>
         <UpdateEncubationStatusDialog/>
+        <EncubationCompleteDialog open={complete} onOpenChange={handleCloseComplete}/>
       </div>
     </main>
   );
