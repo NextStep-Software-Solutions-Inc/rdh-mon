@@ -1,49 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-    AreaChart,
-    Area,
-    CartesianGrid,
-    XAxis,
-    YAxis,
-    ResponsiveContainer,
-} from "recharts";
-import {
-    Card,
-    CardContent,
-    CardDescription, CardFooter,
-    CardHeader,
-    CardTitle,
-} from "~/components/ui/card";
-import {
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-} from "~/components/ui/chart";
-import { ToggleGroup, ToggleGroupItem } from "~/components/ui/toggle-group";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "~/components/ui/select";
 import { useIsMobile } from "~/hooks/use-mobile";
 import {SectionCards} from "~/dashboard/SectionCards";
-import {Separator} from "~/components/ui/separator";
-import {Label} from "~/components/ui/label";
-import {Switch} from "~/components/ui/switch";
-import {Button} from "~/components/ui/button";
-import {TrendingUpIcon} from "lucide-react";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "~/components/ui/table";
+import {IncubationChartCard} from "~/dashboard/IncubationCard";
+import { IncubatorPerformanceTable} from "~/dashboard/IncubatorPerformance";
+import {IncubationControlCard} from "~/dashboard/IncubationControl";
 
 const chartData = [
     { day: 1, quality: 50 },
@@ -85,7 +47,6 @@ export default function EggIncubatorDashboard() {
         if (isMobile) setTimeRange("7d");
     }, [isMobile]);
 
-    const filteredData = chartData; // for demo, use all data
 
     return (
         <div className="flex flex-1 flex-col">
@@ -95,181 +56,13 @@ export default function EggIncubatorDashboard() {
 
                     <div
                         className="*:data-[slot=card]:shadow-xs  @5xl/main:grid-cols-2 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
-                        <Card className="">
-                            <CardHeader className="relative">
-                                <CardTitle>Incubation Egg Viability</CardTitle>
-                                <CardDescription>
-          <span className="@[540px]/card:block hidden">
-            Your hatch rate is on track compared to previous cycles
-          </span>
-                                    <span className="@[540px]/card:hidden">Last 7 days</span>
-                                </CardDescription>
-                                <div className="absolute right-4 top-4">
-                                    <ToggleGroup
-                                        type="single"
-                                        value={timeRange}
-                                        onValueChange={setTimeRange}
-                                        variant="outline"
-                                        className="@[767px]/card:flex hidden"
-                                    >
-                                        <ToggleGroupItem value="90d" className="h-8 px-2.5">
-                                            Last 3 months
-                                        </ToggleGroupItem>
-                                        <ToggleGroupItem value="30d" className="h-8 px-2.5">
-                                            Last 30 days
-                                        </ToggleGroupItem>
-                                        <ToggleGroupItem value="7d" className="h-8 px-2.5">
-                                            Last 7 days
-                                        </ToggleGroupItem>
-                                    </ToggleGroup>
-                                    <Select value={timeRange} onValueChange={setTimeRange}>
-                                        <SelectTrigger className="@[767px]/card:hidden flex w-40">
-                                            <SelectValue placeholder="Last 3 months"/>
-                                        </SelectTrigger>
-                                        <SelectContent className="rounded-xl">
-                                            <SelectItem value="90d" className="rounded-lg">
-                                                Last 3 months
-                                            </SelectItem>
-                                            <SelectItem value="30d" className="rounded-lg">
-                                                Last 30 days
-                                            </SelectItem>
-                                            <SelectItem value="7d" className="rounded-lg">
-                                                Last 7 days
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                            </CardHeader>
-                            <CardContent className="px-2 pt-4 sm:px-6 sm:pt-6">
-                                <ChartContainer
-                                    config={chartConfig}
-                                    className="aspect-auto h-[250px] w-full"
-                                >
-                                    <AreaChart data={filteredData}>
-                                        <defs>
-                                            <linearGradient id="fillQuality" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="var(--color-quality)" stopOpacity={0.8}/>
-                                                <stop offset="95%" stopColor="var(--color-hatchRate)"
-                                                      stopOpacity={0.1}/>
-                                            </linearGradient>
-                                            <linearGradient id="fillTemperature" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="var(--color-temperature)"
-                                                      stopOpacity={0.8}/>
-                                                <stop offset="95%" stopColor="var(--color-temperature)"
-                                                      stopOpacity={0.1}/>
-                                            </linearGradient>
-                                        </defs>
-                                        <CartesianGrid vertical={false}/>
-                                        <XAxis
-                                            dataKey="day"
-                                            tickLine={true}
-                                            axisLine={true}
-                                            tickMargin={8}
-                                            minTickGap={32}
-                                            tickFormatter={(value) => `Day ${value}`}
-                                        />
-                                        <YAxis/>
-                                        <ChartTooltip
-                                            cursor={false}
-                                            content={
-                                                <ChartTooltipContent
-                                                    labelFormatter={(value) => {
-                                                        return value;
-                                                    }}
-                                                    indicator="dot"
-                                                />
-                                            }
-                                        />
-                                        <Area
-                                            dataKey="quality"
-                                            type="monotone"
-                                            fill="url(#fillHatchRate)"
-                                            stroke="#c89237"
-                                            stackId="a"
-                                            dot={true}
-                                        />
-                                        <Area
-                                            dataKey="day"
-                                            type="monotone"
-                                            fill="url(#fillHatchRate)"
-                                            stroke="hsl(141 53% 53%)"
-                                            stackId="a"
-                                            dot={true}
-                                        />
-
-                                    </AreaChart>
-                                </ChartContainer>
-                            </CardContent>
-                            <CardFooter className="flex-col items-start gap-1 text-sm">
-                                <div className="line-clamp-1 flex gap-2 font-medium">
-                                    Up by 8.6% compared to previous cycle <TrendingUpIcon className="size-4" />
-                                </div>
-                                <div className="text-muted-foreground">
-                                   Showing egg viability over the 28-day cycle (weekly checks: Days 7,14,21,28 )
-                                </div>
-                            </CardFooter>
-                        </Card>
-                        <Card className="shadow-lg">
-                            <CardHeader>
-                                <CardTitle>Incubator Performance</CardTitle>
-                                <CardDescription>Batch performance improved across 3 incubators</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead>Incubator</TableHead>
-                                            <TableHead>Batch</TableHead>
-                                            <TableHead>Success Rate</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        <TableRow>
-                                            <TableCell>Incubator A</TableCell>
-                                            <TableCell>Batch 01</TableCell>
-                                            <TableCell>95%</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Incubator B</TableCell>
-                                            <TableCell>Batch 02</TableCell>
-                                            <TableCell>92%</TableCell>
-                                        </TableRow>
-                                        <TableRow>
-                                            <TableCell>Incubator C</TableCell>
-                                            <TableCell>Batch 03</TableCell>
-                                            <TableCell>97%</TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </CardContent>
-                        </Card>
+                        <IncubationChartCard/>
+                        <IncubatorPerformanceTable/>
                     </div>
 
                     <div
                         className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
-                        <Card className="col-span-full shadow-lg">
-                            <CardContent className="p-4">
-                                <h2 className="text-xl font-semibold mb-2">Controls</h2>
-                                <Separator className="mb-4"/>
-                                <div className="flex flex-wrap gap-4">
-                                    <div>
-                                        <Label htmlFor="heat">Heating</Label>
-                                        <Switch id="heat" defaultChecked/>
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="humidifier">Humidifier</Label>
-                                        <Switch id="humidifier"/>
-                                    </div>
-                                    <div>
-                                        <Label htmlFor="fan">Ventilation Fan</Label>
-                                        <Switch id="fan" defaultChecked/>
-                                    </div>
-                                    <div>
-                                        <Button>Reset Timer</Button>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <IncubationControlCard/>
                     </div>
                     </div>
                 </div>
