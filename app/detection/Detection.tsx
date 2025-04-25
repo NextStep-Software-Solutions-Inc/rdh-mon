@@ -76,7 +76,7 @@ const LifeDetectionCard = ({ date, eggType, eggCount, alive, dead, image }: Retu
         <CardTitle className="text-lg font-semibold flex items-center gap-4">{eggType} <Badge variant="outline">{eggCount} pcs</Badge></CardTitle>
         <CardDescription className="text-sm text-gray-500">{date}</CardDescription>
       </CardHeader>
-      <img src={image ? image: "eggspose.png"} alt={`${eggType} egg`} className="object-center h-[300px]" />
+      <img src={image ? image: "eggspose.png"} alt={`${eggType} egg`} className="object-cover center h-[300px]" />
       <div className="flex justify-between mt-4 mx-4">
         <span>Alive: {alive}</span>
         <span>Dead: {dead}</span>
@@ -92,7 +92,7 @@ const GenderDetectionCard = ({ date, eggType, eggCount, alive, dead, image }: Re
         <CardTitle className="text-lg font-semibold flex items-center gap-4">{eggType} <Badge variant="outline">{eggCount} pcs</Badge></CardTitle>
         <CardDescription className="text-sm text-gray-500">{date}</CardDescription>
       </CardHeader>
-      <img src={image ? image: "eggspose.png"} alt={`${eggType} egg`} className="object-center h-[300px]" />
+      <img src={image ? image: "eggspose.png"} alt={`${eggType} egg`} className="object-cover center h-[300px]" />
       <div className="flex justify-between mt-2 mx-4">
         <span>Male: {alive}</span>
         <span>Female: {dead}</span>
