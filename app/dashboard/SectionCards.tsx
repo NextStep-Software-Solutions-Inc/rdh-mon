@@ -53,7 +53,7 @@ export function SectionCards() {
 
                     <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
                         <p className="text-gray-700 text-sm">Total Eggs</p>
-                        <h1 className="text-xxl font-semibold mb-2"> {totalEggs}</h1>
+                        <h1 className="text-xxl font-semibold mb-2"> +{new Intl.NumberFormat("en-US").format(totalEggs)}</h1>
 
                         <p className="text-green-600 text-sm">
                             Eggs Left: {aliveEggs} ({((aliveEggs / totalEggs) * 100).toFixed(1)}%)
@@ -107,7 +107,7 @@ export function SectionCards() {
 
                     <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
                         <p className="text-gray-700 text-sm">Female Ducks Hatched</p>
-                        <h1 className="text-xxl font-semibold mb-2"> {femaleEggs}</h1>
+                        <h1 className="text-xxl font-semibold mb-2">+{new Intl.NumberFormat("en-US").format(femaleEggs)}</h1>
 
                         <p className="text-purple-500 text-sm">
                             Female Eggs Left: {aliveFemaleEggs} ({((aliveFemaleEggs / totalEggs) * 100).toFixed(1)}%)
