@@ -37,10 +37,10 @@ export default function EncubationAreaChart({eggLossPerInterval}: {eggLossPerInt
 
   const chartData = [
     { days: "0 Day", eggs: initialEggCount - (eggLossPerInterval[0] ?? 0), threshold: 80 },
-    { days: "7 Days", eggs: initialEggCount - (eggLossPerInterval[7] ?? 0), threshold: 80 },
-    { days: "14 Days", eggs: initialEggCount - (eggLossPerInterval[14] ?? 0), threshold: 80 },
-    { days: "21 Days", eggs: initialEggCount - (eggLossPerInterval[21] ?? 0), threshold: 80 },
-    { days: "28 Days", eggs: initialEggCount - (eggLossPerInterval[28] ?? 0), threshold: 80 }
+    { days: "7 Days", eggs: initialEggCount - (eggLossPerInterval[0] ?? 0) - (eggLossPerInterval[7] ?? 0), threshold: 80 },
+    { days: "14 Days", eggs: initialEggCount - (eggLossPerInterval[0] ?? 0) - (eggLossPerInterval[7] ?? 0) - (eggLossPerInterval[14] ?? 0), threshold: 80 },
+    { days: "21 Days", eggs: initialEggCount - (eggLossPerInterval[0] ?? 0) - (eggLossPerInterval[7] ?? 0) - (eggLossPerInterval[14] ?? 0) - (eggLossPerInterval[21] ?? 0), threshold: 80 },
+    { days: "28 Days", eggs: initialEggCount - (eggLossPerInterval[0] ?? 0) - (eggLossPerInterval[7] ?? 0) - (eggLossPerInterval[14] ?? 0) - (eggLossPerInterval[28] ?? 0), threshold: 80 }
   ]
   
   return (

@@ -13,6 +13,7 @@ import { Input } from "~/components/ui/input"
 import { Label } from "~/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select"
 import { useSearchParams } from "react-router"
+import { useRef } from "react"
 
 const intevals = [7, 14, 21, 28]
 
@@ -22,6 +23,7 @@ interface UpdateEncubationStatusDialogProps {
 
 export default function UpdateEncubationStatusDialog({onSubmit}: UpdateEncubationStatusDialogProps) {
   const [, setSearchParams] = useSearchParams()
+  const closeRef = useRef<HTMLButtonElement>(null)
 
   const handleShowComplete = (open: boolean) => {
     setSearchParams(prev => {
@@ -38,6 +40,8 @@ export default function UpdateEncubationStatusDialog({onSubmit}: UpdateEncubatio
     const intervalValue = interval ? parseInt(interval.toString()) : 0
     const lossValue = loss ? parseInt(loss.toString()) : 0
     onSubmit(intervalValue, lossValue)
+    // close the dialog
+    closeRef.current?.click()
     
     // if the intervalValue is equal to the last interval, show the complete dialog
     if (intervalValue === intevals[intevals.length - 1]) {
@@ -91,7 +95,7 @@ export default function UpdateEncubationStatusDialog({onSubmit}: UpdateEncubatio
           </div>
           <DialogFooter>
               <DialogClose>
-                  <Button variant="outline">Cancel</Button>
+                  <Button ref={closeRef} variant="outline">Cancel</Button>
               </DialogClose>
             <Button type="submit">Save changes</Button>
           </DialogFooter>

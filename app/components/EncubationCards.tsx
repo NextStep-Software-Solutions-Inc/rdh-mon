@@ -128,7 +128,7 @@ export default function EncubationCards({eggPrice, initilaEggCount, maleChickPri
         <CardHeader className="relative">
           <CardDescription>Hatch Rate</CardDescription>
           <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
-            {hatchRate}%
+            {hatchRate.toFixed(2)}%
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1 text-sm">
