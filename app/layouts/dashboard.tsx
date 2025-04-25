@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router'
+import { Outlet, useLocation } from 'react-router'
 import { AppSidebar } from "~/components/AppSidebar"
 import {
   Breadcrumb,
@@ -17,6 +17,10 @@ import {
 
 
 export default function DashboardLayout() {
+
+const pathname = useLocation().pathname
+const paths = pathname.split("/").filter((path) => path !== "")
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -27,15 +31,33 @@ export default function DashboardLayout() {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                </BreadcrumbItem>
+              {
+                paths.map((path, index) => {
+                  const href = `/${paths.slice(0, index + 1).join("/")}`
+                  return (
+                    <>
+                      {
+                        index < paths.length - 1 ? (
+                          <BreadcrumbItem key={index}>
+                            <BreadcrumbLink href={href}>
+                              {path.charAt(0).toUpperCase() + path.slice(1)}
+                            </BreadcrumbLink>
+                          </BreadcrumbItem>
+                        ) : (
+                          <BreadcrumbItem>
+                            <BreadcrumbPage>{path.charAt(0).toUpperCase() + path.slice(1)}</BreadcrumbPage>
+                          </BreadcrumbItem>
+                        )
+                      }
+                      {
+                        index < paths.length - 1 && (
+                          <BreadcrumbSeparator key={index + 1} className="hidden md:block" />
+                        )
+                      }
+                    </>
+                  )
+                })
+              }
               </BreadcrumbList>
             </Breadcrumb>
           </div>
