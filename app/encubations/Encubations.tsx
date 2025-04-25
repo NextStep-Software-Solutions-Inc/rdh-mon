@@ -43,7 +43,8 @@ const data: Payment[] = [
     status: "active",
     name: "Encubation #06",
     interval: 7,
-    date: "April 11, 2025"
+    start: "April 01, 2025",
+    end: "April 28, 2025"
   },
   {
     id: "5",
@@ -51,7 +52,8 @@ const data: Payment[] = [
     status: "completed",
     name: "Encubation #05",
     interval: 7,
-    date: "April 10, 2025"
+    start: "February 10, 2025",
+    end: "February 28, 2025"
   },
   {
     id: "4",
@@ -59,7 +61,8 @@ const data: Payment[] = [
     status: "completed",
     name: "Encubation #04",
     interval: 7,
-    date: "March 10, 2025"
+    start: "February 12, 2025",
+    end: "March 18, 2025"
   },
   {
     id: "3",
@@ -67,7 +70,8 @@ const data: Payment[] = [
     status: "active",
     name: "Encubation #03",
     interval: 7,
-    date: "February 10, 2025"
+    start: "March 10, 2025",
+    end: "March 28, 2025"
   },
   {
     id: "2",
@@ -75,7 +79,8 @@ const data: Payment[] = [
     status: "completed",
     name: "Encubation #02",
     interval: 7,
-    date: "January 20, 2025"
+    start: "February 10, 2025",
+    end: "February 28, 2025"
   },
   {
     id: "1",
@@ -83,7 +88,8 @@ const data: Payment[] = [
     status: "stopped",
     name: "Encubation #01",
     interval: 7,
-    date: "January 10, 2025"
+    start: "January 10, 2025",
+    end: "January 28, 2025"
   },
 ]
 
@@ -92,7 +98,8 @@ export type Payment = {
   duration: number
   status: "active" | "completed" | "stopped" 
   name: string,
-  date: string,
+  start: string,
+  end: string,
   interval: number
 }
 
@@ -134,10 +141,17 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: "date",
-    header: "Start Date",
+    accessorKey: "start",
+    header: "Date",
     cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("date")}</div>
+      <div className="capitalize">{row.getValue("start")}</div>
+    ),
+  },
+  {
+    accessorKey: "end",
+    header: "Date",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("end")}</div>
     ),
   },
   {
@@ -215,7 +229,8 @@ export default function Encubation() {
   })
 
   return (
-    <div className="w-full">
+  
+    <div className="p-4">
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter status..."
@@ -327,5 +342,6 @@ export default function Encubation() {
         </div>
       </div>
     </div>
+  
   )
 }
