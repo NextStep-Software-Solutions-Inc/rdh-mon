@@ -14,10 +14,13 @@ import { Label } from "~/components/ui/label"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "./ui/select"
 import { useSearchParams } from "react-router"
 
-
 const intevals = [7, 14, 21, 28]
 
-export default function UpdateEncubationStatusDialog() {
+interface UpdateEncubationStatusDialogProps {
+  onSubmit: (interval: number, loss: number) => void
+}
+
+export default function UpdateEncubationStatusDialog({onSubmit}: UpdateEncubationStatusDialogProps) {
   const [, setSearchParams] = useSearchParams()
 
   const handleShowComplete = (open: boolean) => {
@@ -34,7 +37,8 @@ export default function UpdateEncubationStatusDialog() {
     const loss = formData.get("loss")
     const intervalValue = interval ? parseInt(interval.toString()) : 0
     const lossValue = loss ? parseInt(loss.toString()) : 0
-
+    onSubmit(intervalValue, lossValue)
+    
     // if the intervalValue is equal to the last interval, show the complete dialog
     if (intervalValue === intevals[intevals.length - 1]) {
       handleShowComplete(true)

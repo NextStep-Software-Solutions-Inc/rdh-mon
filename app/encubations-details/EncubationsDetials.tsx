@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useSearchParams } from "react-router";
 import EncubationAreaChart from "~/components/charts/EncubationAreaChart";
 import EncubationCards, { type EncubationCardsProps } from "~/components/EncubationCards";
@@ -22,7 +23,7 @@ const encubation: Encubation = {
   endDate: "2025-05-22",
   status: "In Progress",
   survivalThreshold: 80,
-  eggCount: 100,
+  eggCount: 3200,
   eggType: "duck",
   intervalDays: 7,
 }
@@ -31,13 +32,7 @@ export default function EncubationsDetials() {
   const {encubationId} = useParams<{encubationId: string}>()
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const eggLossPerInterval = {
-    0: 0,
-    7: undefined,
-    14: undefined,
-    21: undefined,
-    28: undefined,
-  }
+
 
   const complete = searchParams.get("complete") === "true";
    
@@ -48,6 +43,17 @@ export default function EncubationsDetials() {
     });
   }
   
+  const [eggLossMapping, setEggLossMapping] = useState<Map<number, number | undefined>>(new Map<number, number | undefined>([
+    [0, 0],
+    [7, undefined],
+    [14, undefined],
+    [21, undefined],
+    [28, undefined],
+  ]));
+
+  const eggLossPerInterval = Object.fromEntries(eggLossMapping.entries())
+
+  console.log({eggLossPerInterval})
 
   const encubationStats: EncubationCardsProps = {
     maleChickPrice: 5,
@@ -75,10 +81,10 @@ export default function EncubationsDetials() {
           <EncubationCards {...encubationStats}/>
       </section>
       <section>
-        <EncubationAreaChart/>
+        <EncubationAreaChart eggLossPerInterval={eggLossPerInterval}/>
       </section>
       <div>
-        <UpdateEncubationStatusDialog/>
+        <UpdateEncubationStatusDialog onSubmit={() => {}}/>
         <EncubationCompleteDialog open={complete} onOpenChange={handleCloseComplete}/>
       </div>
     </main>

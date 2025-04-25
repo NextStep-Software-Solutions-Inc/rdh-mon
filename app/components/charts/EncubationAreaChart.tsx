@@ -20,16 +20,6 @@ import {
   ChartTooltipContent,
 } from "~/components/ui/chart"
 
-
-const eggLossPerInterval = {
-  0: 0,
-  7: 20,
-  14: undefined,
-  21: undefined,
-  28: undefined,
-}
-
-
 const chartConfig = {
   eggs: {
     label: "Eggs",
@@ -41,21 +31,18 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export default function EncubationAreaChart({initialEggCount}: {initialEggCount: number}) {
+export default function EncubationAreaChart({eggLossPerInterval}: {eggLossPerInterval: Record<number, number | undefined>}) {
 
-// Dynamically calculate the eggs count based on the loss per interval
-const chartData = Object.keys(eggLossPerInterval).map((key, index) => {
-  const days = `${key} ${key === "0" ? "Day" : "Days"}`;
-  console.log({days})
-  const cumulativeLoss = Object.values(eggLossPerInterval)
-    .slice(0, index + 1)
-    .reduce((acc, loss) => acc + (loss || 0), 0);
-    
-  const eggs = initialEggCount - (cumulativeLoss ?? 0);
-  return { days, eggs, threshold: 80 };
-});
-console.log({chartData})
+  const initialEggCount = 1000
 
+  const chartData = [
+    { days: "0 Day", eggs: initialEggCount - (eggLossPerInterval[0] ?? 0), threshold: 80 },
+    { days: "7 Days", eggs: initialEggCount - (eggLossPerInterval[7] ?? 0), threshold: 80 },
+    { days: "14 Days", eggs: initialEggCount - (eggLossPerInterval[14] ?? 0), threshold: 80 },
+    { days: "21 Days", eggs: initialEggCount - (eggLossPerInterval[21] ?? 0), threshold: 80 },
+    { days: "28 Days", eggs: initialEggCount - (eggLossPerInterval[28] ?? 0), threshold: 80 }
+  ]
+  
   return (
     <Card>
       <CardHeader>
