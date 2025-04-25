@@ -6,7 +6,7 @@ import EncubationCompleteDialog from "~/components/EncubationCompleteDialog";
 import { Badge } from "~/components/ui/badge";
 import UpdateEncubationStatusDialog from "~/components/UpdateEncubationStatusDialog";
 
-type Encubation = {
+export type Encubation = {
   id: number;
   startDate: string;
   endDate: string;

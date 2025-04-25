@@ -35,75 +35,33 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table"
+import type { Encubation } from "~/encubations-details/EncubationsDetials"
+import { faker } from '@faker-js/faker'
+import NewEncubationDialog from "~/components/NewEncubationDialog"
 
-const data: Payment[] = [
-  {
-    id: "6",
-    duration: 28,
-    status: "active",
-    name: "Encubation #06",
-    interval: 7,
-    start: "April 01, 2025",
-    end: "April 28, 2025"
-  },
-  {
-    id: "5",
-    duration: 28,
-    status: "completed",
-    name: "Encubation #05",
-    interval: 7,
-    start: "February 10, 2025",
-    end: "February 28, 2025"
-  },
-  {
-    id: "4",
-    duration: 28,
-    status: "completed",
-    name: "Encubation #04",
-    interval: 7,
-    start: "February 12, 2025",
-    end: "March 18, 2025"
-  },
-  {
-    id: "3",
-    duration: 28,
-    status: "active",
-    name: "Encubation #03",
-    interval: 7,
-    start: "March 10, 2025",
-    end: "March 28, 2025"
-  },
-  {
-    id: "2",
-    duration: 28,
-    status: "completed",
-    name: "Encubation #02",
-    interval: 7,
-    start: "February 10, 2025",
-    end: "February 28, 2025"
-  },
-  {
-    id: "1",
-    duration: 28,
-    status: "stopped",
-    name: "Encubation #01",
-    interval: 7,
-    start: "January 10, 2025",
-    end: "January 28, 2025"
-  },
-]
 
-export type Payment = {
-  id: string
-  duration: number
-  status: "active" | "completed" | "stopped" 
-  name: string,
-  start: string,
-  end: string,
-  interval: number
-}
+const generateEncubation = (id: number): Encubation => ({
+  id,
+  eggCount: 1000,
+  eggType: faker.helpers.arrayElement(["Duck"]),
+  startDate: faker.date.recent().toLocaleDateString("en-PH", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }),
+  endDate: faker.date.recent().toLocaleDateString("en-PH", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }),
+  intervalDays: 7,
+  status: "In Progress",
+  survivalThreshold: 80,
+})
 
-export const columns: ColumnDef<Payment>[] = [
+const data: Encubation[] = Array.from({ length: 10 }, (_, index) => generateEncubation(index + 1))
+
+export const columns: ColumnDef<Encubation>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -127,45 +85,24 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
+    accessorKey: "date",
+    header: "Date",
+    cell: ({ row }) => (
+      <div className="capitalize">Start: {row.original.startDate} - End: {row.original.endDate}</div>
+    ),
+  },
+  {
+    accessorKey: "intervalDays",
+    header: "Candling Interval",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("intervalDays")} Days</div>
+    ),
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
       <div className="capitalize">{row.getValue("status")}</div>
-    ),
-  },
-  {
-    accessorKey: "name",
-    header: "Encubation Name",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("name")}</div>
-    ),
-  },
-  {
-    accessorKey: "start",
-    header: "Date",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("start")}</div>
-    ),
-  },
-  {
-    accessorKey: "end",
-    header: "Date",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("end")}</div>
-    ),
-  },
-  {
-    accessorKey: "interval",
-    header: "Interval",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("interval")}</div>
-    ),
-  },
-  {
-    accessorKey: "duration",
-    header: "Duration",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("duration")}</div>
     ),
   },
   {
@@ -186,7 +123,7 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(payment.id.toString())}
             >
               Copy Encubation ID
             </DropdownMenuItem>
@@ -266,6 +203,7 @@ export default function Encubation() {
               })}
           </DropdownMenuContent>
         </DropdownMenu>
+        <NewEncubationDialog/>
       </div>
       <div className="rounded-md border">
         <Table>
