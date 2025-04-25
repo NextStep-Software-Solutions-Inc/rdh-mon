@@ -49,9 +49,9 @@ export type IncubatorBatch = {
 };
 
 const data: IncubatorBatch[] = [
-    { incubator: "Incubator A", batch: "Batch 01", successRate: 95 },
-    { incubator: "Incubator B", batch: "Batch 02", successRate: 92 },
-    { incubator: "Incubator C", batch: "Batch 03", successRate: 97 },
+    { incubator: "Hatched", batch: "INC-29032", successRate: 95 },
+    { incubator: "Ongoing", batch: "INC-90343", successRate: 92 },
+    { incubator: "Failed", batch: "INC-94824", successRate: 97 },
 ];
 
 const columns: ColumnDef<IncubatorBatch, any>[] = [
