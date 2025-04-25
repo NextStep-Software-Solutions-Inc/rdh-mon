@@ -3,7 +3,6 @@ import EncubationAreaChart from "~/components/charts/EncubationAreaChart";
 import EncubationCards, { type EncubationCardsProps } from "~/components/EncubationCards";
 import EncubationCompleteDialog from "~/components/EncubationCompleteDialog";
 import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
 import UpdateEncubationStatusDialog from "~/components/UpdateEncubationStatusDialog";
 
 type Encubation = {
@@ -31,6 +30,14 @@ const encubation: Encubation = {
 export default function EncubationsDetials() {
   const {encubationId} = useParams<{encubationId: string}>()
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const eggLossPerInterval = {
+    0: 0,
+    7: undefined,
+    14: undefined,
+    21: undefined,
+    28: undefined,
+  }
 
   const complete = searchParams.get("complete") === "true";
    

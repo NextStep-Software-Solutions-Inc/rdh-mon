@@ -23,23 +23,14 @@ export function SectionCards() {
     const totalEggs = femaleEggs + maleEggs;
     const [aliveFemaleEggs, setAliveFemaleEggs] = useState(360);
     const [aliveEggs, setAliveEggs] = useState(femaleEggs + maleEggs);
-    const [temperature, setTemperature] = useState(37.8);
 
     useEffect(() => {
         const eggInterval = setInterval(() => {
             setAliveEggs(prev => Math.max(prev - (Math.random() < 0.3 ? 1 : 0), 0));
         }, 3000);
 
-        const tempInterval = setInterval(() => {
-            setTemperature(prev => {
-                const next = prev + (Math.random() - 0.5) * 0.4;
-                return parseFloat(Math.max(36.5, Math.min(39.0, next)).toFixed(2));
-            });
-        }, 3000);
-
         return () => {
             clearInterval(eggInterval);
-            clearInterval(tempInterval);
         };
     }, []);
 
@@ -47,7 +38,7 @@ export function SectionCards() {
     const mortalityRate = (deadEggs / totalEggs) * 100;
 
     return (
-        <div className="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 xl:grid-cols-4 lg:px-6">
+        <div className="grid grid-cols-1 gap-6 px-4 sm:grid-cols-2 xl:grid-cols-3 lg:px-6">
            <Card className="transition hover:shadow-xl border rounded-2xl bg-white/90 dark:bg-muted/80 backdrop-blur-md">
                 <CardHeader>
                     <CardTitle className="text-lg font-bold">Total Eggs</CardTitle>
@@ -115,34 +106,7 @@ export function SectionCards() {
             </Card>
 
             {/* Temperature */}
-            <Card className="transition hover:shadow-xl border rounded-2xl bg-white/90 dark:bg-muted/80 backdrop-blur-md">
-                <CardHeader>
-                    <CardTitle className="text-lg font-bold">Temperature</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex items-center gap-4">
-                        <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
-                            <Thermometer className="w-5 h-5 text-blue-600" />
-                        </div>
-                        <div>
-                            <p className="text-sm text-gray-600">
-                                Current: {temperature.toFixed(2)}°C
-                            </p>
-                            <Progress
-                                value={((temperature - 36.5) / (39 - 36.5)) * 100}
-                                className="mt-1"
-                            />
-                        </div>
-                    </div>
-                </CardContent>
-                <CardFooter className="flex justify-between text-sm">
-                    <Badge className="bg-blue-100 text-blue-700 flex gap-1 rounded-md px-2 py-0.5">
-                        <TrendingUpIcon className="w-4 h-4" />
-                        +12.5%
-                    </Badge>
-                    <span className="text-muted-foreground">Stable conditions</span>
-                </CardFooter>
-            </Card>
+            
 
         </div>
     );

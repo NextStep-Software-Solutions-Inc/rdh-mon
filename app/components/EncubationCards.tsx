@@ -1,12 +1,16 @@
-import { TrendingDownIcon, TrendingUpIcon } from "lucide-react"
+import { Power, Thermometer, TrendingDownIcon, TrendingUpIcon } from "lucide-react"
 import { Badge } from "~/components/ui/badge"
 import {
   Card,
+  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card"
+import { Progress } from "./ui/progress"
+import { useEffect, useState } from "react"
+
 
 export interface EncubationCardsProps {
     maleChickPrice: number
@@ -52,7 +56,8 @@ export default function EncubationCards({eggPrice, initilaEggCount, maleChickPri
     }
 
   return (
-    <div className="*:data-[slot=card]:shadow-xs lg:grid-cols-2 xl:grid-cols-4 grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card ">
+    <>
+      <div className="*:data-[slot=card]:shadow-xs lg:grid-cols-2 xl:grid-cols-4 grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card ">
       <Card className="~container/card">
         <CardHeader className="relative">
           <CardDescription>Total Potential Revenue</CardDescription>
@@ -68,10 +73,10 @@ export default function EncubationCards({eggPrice, initilaEggCount, maleChickPri
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <TrendingUpIcon className="size-4" />
+            Trending up this period <TrendingUpIcon className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Visitors for the last 6 months
+            Combine male, female chicks, penoy and balot revenue
           </div>
         </CardFooter>
       </Card>
@@ -93,7 +98,7 @@ export default function EncubationCards({eggPrice, initilaEggCount, maleChickPri
             Down 20% this period <TrendingDownIcon className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Acquisition needs attention
+            Non hatching eggs revenue
           </div>
         </CardFooter>
       </Card>
@@ -114,7 +119,9 @@ export default function EncubationCards({eggPrice, initilaEggCount, maleChickPri
           <div className="line-clamp-1 flex gap-2 font-medium">
             Strong user retention <TrendingUpIcon className="size-4" />
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+          <div className="text-muted-foreground">
+            Non hatching eggs revenue
+          </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
@@ -131,6 +138,107 @@ export default function EncubationCards({eggPrice, initilaEggCount, maleChickPri
           <div className="text-muted-foreground">Meets growth projections</div>
         </CardFooter>
       </Card>
+      <TemperatureCard/>
+      <EnergyCard/>
     </div>
+    </>
   )
+}
+
+
+const TemperatureCard = () => {
+  
+    const [temperature, setTemperature] = useState(37.8);
+
+    useEffect(() => {
+        const tempInterval = setInterval(() => {
+            setTemperature(prev => {
+                const next = prev + (Math.random() - 0.5) * 0.4;
+                return parseFloat(Math.max(36.5, Math.min(39.0, next)).toFixed(2));
+            });
+        }, 3000);
+
+        return () => {
+            clearInterval(tempInterval);
+        };
+      }, []);
+
+  return (
+    <Card className="transition hover:shadow-xl border rounded-2xl bg-white/90 dark:bg-muted/80 backdrop-blur-md">
+        <CardHeader>
+            <CardTitle className="text-lg font-bold">Temperature</CardTitle>
+        </CardHeader>
+        <CardContent>
+            <div className="flex items-center gap-4">
+                <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
+                    <Thermometer className="w-5 h-5 text-blue-600" />
+                </div>
+                <div className="w-full">
+                    <p className="text-xl font-semibold text-gray-600 flex justify-between">
+                        <span>{temperature.toFixed(2)}</span> <span>°C</span>
+                    </p>
+                    <Progress
+                        value={((temperature - 36.5) / (39 - 36.5)) * 100}
+                        className="mt-1"
+                    />
+                </div>
+            </div>
+        </CardContent>
+        <CardFooter className="flex justify-between text-sm">
+            <Badge className="bg-blue-100 text-blue-700 flex gap-1 rounded-md px-2 py-0.5">
+                <TrendingUpIcon className="w-4 h-4" />
+                +12.5%
+            </Badge>
+            <span className="text-muted-foreground">Stable conditions</span>
+        </CardFooter>
+    </Card>
+  )
+}
+
+const EnergyCard = () => {
+  const [power, setPower] = useState(0.234);
+
+  useEffect(() => {
+    const eneryInterval = setInterval(() => {
+      setPower((prev) => {
+        const next = prev + (Math.random() - 0.2) * 0.5;
+        // Fix: Correct the range clamping
+        return parseFloat(Math.max(0.215, Math.min(0.494, next)).toFixed(4));
+      });
+    }, 1000);
+
+      return () => {
+          clearInterval(eneryInterval);
+      };
+  }, []);
+return (
+<Card className="transition hover:shadow-xl border rounded-2xl bg-white/90 dark:bg-muted/80 backdrop-blur-md">
+    <CardHeader>
+        <CardTitle className="text-lg font-bold">Energy</CardTitle>
+    </CardHeader>
+    <CardContent>
+        <div className="flex items-center gap-4">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-full">
+                <Power className="w-5 h-5 text-blue-600" />
+            </div>
+            <div className="w-full">
+                <p className="text-gray-600 text-xl font-semibold flex justify-between">
+                    <span>{power.toFixed(3)}</span> <span>kWH</span>
+                </p>
+                <Progress
+                    value={((power - 0.234) / (1 - 0.234)) * 100}
+                    className="mt-1 "
+                />
+            </div>
+        </div>
+    </CardContent>
+    <CardFooter className="flex justify-between text-sm">
+        <Badge className="bg-blue-100 text-blue-700 flex gap-1 rounded-md px-2 py-0.5">
+            <TrendingUpIcon className="w-4 h-4" />
+            +12.5%
+        </Badge>
+        <span className="text-muted-foreground">Stable conditions</span>
+    </CardFooter>
+</Card>
+)
 }

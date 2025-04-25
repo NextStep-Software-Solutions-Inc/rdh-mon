@@ -46,7 +46,7 @@ export default function UpdateEncubationStatusDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full sticky bottom-0" size="lg">
+        <Button className="w-full sticky bottom-10 mb-10" size="lg">
           Update Encubation Status
         </Button>
       </DialogTrigger>
